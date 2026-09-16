@@ -1,0 +1,24 @@
+Category,Priority,Stack,Recognize By (files present),Install Command,Build Command,Start/Run Command,Notes
+Backend,High,Java + Maven,"pom.xml, mvnw, mvnw.cmd",(bundled into build step),mvn clean package (or ./mvnw clean package),java -jar target/<app-name>.jar,Prefer the mvnw wrapper if present - pins exact Maven version
+Backend,High,Java + Gradle,"build.gradle or build.gradle.kts, gradlew, gradlew.bat, settings.gradle",(bundled into build step),./gradlew build (or ./gradlew bootJar for Spring Boot),java -jar build/libs/<app-name>.jar,.kts is just Gradle's Kotlin syntax - still Gradle
+Backend,High,Node.js + npm,package.json + package-lock.json,npm install (or npm ci in Docker),npm run build (only if a build step exists),npm start,Check package.json "scripts" section - do not assume
+Backend,High,Node.js + Yarn,package.json + yarn.lock,yarn install,yarn build,yarn start,
+Backend,Medium,Node.js + pnpm,package.json + pnpm-lock.yaml,pnpm install,pnpm build,pnpm start,
+Backend,Low,Node.js + Bun,package.json + bun.lock/bun.lockb,bun install,bun run build,bun start,
+Backend,Medium,Python (plain),requirements.txt,pip install -r requirements.txt,(no build step - Python isn't compiled),varies - check for main.py/app.py,
+Backend,Medium,Python + Django,manage.py + requirements.txt or pyproject.toml,same as detected Python dep tool,(none),Dev: python manage.py runserver 0.0.0.0:8000 | Prod: gunicorn <project>.wsgi:application --bind 0.0.0.0:8000,
+Backend,Medium,Python + FastAPI,main.py + requirements.txt or pyproject.toml,same as detected Python dep tool,(none),uvicorn main:app --host 0.0.0.0 --port 8000,module name before the colon must match the actual file
+Backend,Low,Python + Poetry,pyproject.toml + poetry.lock,poetry install,(none),poetry run python <entry>.py,
+Backend,Low,Python + Pipenv,Pipfile + Pipfile.lock,pipenv install,(none),pipenv run python <entry>.py,
+Backend,Low,Python + uv,pyproject.toml + uv.lock,uv sync,(none),uv run python <entry>.py,
+Backend,Low,.NET,*.csproj / *.sln,dotnet restore,dotnet publish -c Release -o /app/publish,dotnet <AppName>.dll,
+Backend,Low,Go,go.mod + go.sum,go mod download,go build -o app,./app,Compiled binary - good fit for a minimal multi-stage build
+Backend,Low,PHP + Composer,composer.json + composer.lock,composer install,(none),Served via PHP-FPM + Nginx (php artisan serve is dev-only),artisan file present = Laravel specifically
+Backend,Low,Ruby,Gemfile + Gemfile.lock,bundle install,(none),bundle exec puma (Rails) or ruby app.rb,
+Backend,Low,Rust,Cargo.toml + Cargo.lock,(bundled into build step),cargo build --release,./target/release/<binary-name>,Compiled binary - same multi-stage logic as Go
+Frontend,High,React + Vite,package.json + vite.config.js/.ts,npm install,npm run build,Served by Nginx (multi-stage),Output folder: dist/
+Frontend,High,React (Create React App),package.json + src/ (no vite config),npm install,npm run build,Served by Nginx (multi-stage),Output folder: build/
+Frontend,Medium,Angular,angular.json,npm install,npm run build (or ng build),Served by Nginx (multi-stage),Output folder: dist/<project-name>/ - nested one level deeper
+Frontend,Medium,Vue,package.json + vite.config.js/.ts (or vue.config.js for older Vue-CLI),npm install,npm run build,Served by Nginx (multi-stage),Output folder: dist/
+Frontend,Low,Next.js,next.config.js/.ts + package.json,npm install,npm run build,npm start (live Node server - NOT static Nginx),Output folder: .next/ - not plain static files
+Frontend,Low,Svelte / SvelteKit,svelte.config.js,npm install,npm run build,Nginx if static adapter / Node if Node adapter,Output folder: build/ or .svelte-kit/ depending on adapter
